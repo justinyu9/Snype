@@ -19,7 +19,9 @@
         <activity android:name=".temp" />
         <activity android:name=".Enter_Name" />
         <activity android:name=".Main_Page" />
-        <activity android:name=".Login"></activity>
+        <activity android:name=".Login" />
+        <activity android:name=".Search" />
+        <activity android:name=".Search_Info"></activity>
     </application>
 
 </manifest>
