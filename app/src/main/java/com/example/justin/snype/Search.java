@@ -1,5 +1,6 @@
 package com.example.justin.snype;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -22,28 +23,59 @@ public class Search extends AppCompatActivity {
         String[] cat_split = categories[0].split("@");
         search.setText(cat_split[0]);
         search.setOnTouchListener(new OnSwipeTouchListener(Search.this) {
+            SharedPreferences read = getSharedPreferences("discarded", MODE_PRIVATE);
+            SharedPreferences.Editor edit = getSharedPreferences("discarded", MODE_PRIVATE).edit();
             int counter = 0;
+            int deleted = 0;
             public void onSwipeTop() {
                 Toast.makeText(Search.this, "top", Toast.LENGTH_SHORT).show();
             }
             public void onSwipeRight() {
                 counter--;
-                if(counter<0) {
-                    counter = categories.length;
+                boolean found = true;
+                while(found) {
+                    if (counter < 0) {
+                        counter = categories.length;
+                    }
+                    String[] cat_split = categories[counter].split("@");
+                    if(read.contains(cat_split[0])){
+                        counter--;
+                    }
+                    else{
+                        found = false;
+                        search.setText(cat_split[0]);
+                    }
                 }
-                String[] cat_split = categories[counter].split("@");
-                search.setText(cat_split[0]);
             }
             public void onSwipeLeft() {
+                counter++;
+                boolean found = true;
+                while(found) {
+                    if (counter >= categories.length) {
+                        counter = 0;
+                    }
+                    String[] cat_split = categories[counter].split("@");
+                    if(read.contains(cat_split[0])){
+                        counter++;
+                    }
+                    else{
+                        found = false;
+                        search.setText(cat_split[0]);
+                    }
+                }
+            }
+            public void onSwipeBottom() {
+                String[] cat_split = categories[counter].split("@");
+                String deleter = cat_split[0];
+                edit.putString(cat_split[0], "true");
+                edit.commit();
                 counter++;
                 if(counter>categories.length){
                     counter = 0;
                 }
-                String[] cat_split = categories[counter].split("@");
+                cat_split = categories[counter].split("@");
                 search.setText(cat_split[0]);
-            }
-            public void onSwipeBottom() {
-                Toast.makeText(Search.this, "bottom", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Search.this, "deleted " + deleter, Toast.LENGTH_SHORT).show();
             }
 
         });

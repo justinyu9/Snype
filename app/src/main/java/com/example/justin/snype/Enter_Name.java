@@ -17,7 +17,6 @@ public class Enter_Name extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter__name);
-
         Button myButton = (Button) findViewById(R.id.Next_Button);
         final EditText text1 = (EditText) findViewById(R.id.Name_Next);
         myButton.setOnClickListener(new android.view.View.OnClickListener() {
