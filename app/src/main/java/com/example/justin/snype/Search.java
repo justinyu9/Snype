@@ -42,13 +42,8 @@ public class Search extends AppCompatActivity {
                 String saver = "";
                 edit1.putString(categories[counter], "true");
                 if(!read1.contains("saved")){
-                    edit1.putString("saved", categories[counter]);
+                    edit1.putString("saved", "true");
                     mybutton.setVisibility(View.VISIBLE);
-                }
-                else{
-                    temp = read1.getString("saved", "No name defined");
-                    temp = temp+(categories[counter]+"#");
-                    edit1.putString("saved", temp);
                 }
                 saver = cat_split[0];
                 edit1.commit();
@@ -152,6 +147,13 @@ public class Search extends AppCompatActivity {
     }
     public void next(View view){
         Intent intent = new Intent(Search.this, Picked.class);
+        Bundle bundle = new Bundle();
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void switching(View view){
+        Intent intent = new Intent(Search.this, list_search.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         startActivity(intent);

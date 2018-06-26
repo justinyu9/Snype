@@ -3,4 +3,8 @@
     <string name="title_activity_temp">temp</string>
     <string name="title_activity_picked">Picked</string>
     <string name="action_settings">Action Settings</string>
+    <string name="title_activity_list_search">list_search</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
