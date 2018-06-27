@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,31 +76,48 @@ public class list_search extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            Picked.ViewHolder mainViewholder = null;
+            list_search.ViewHolder mainViewholder = null;
+            SharedPreferences reader = getSharedPreferences("clicked", MODE_PRIVATE);
+            SharedPreferences.Editor editor = getSharedPreferences("clicked", MODE_PRIVATE).edit();
+            if(!reader.contains("clicker")){
+                editor.putString("clicker","false");
+                editor.commit();
+            }
+
             if(convertView == null) {
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(layout, parent, false);
                 list_search.ViewHolder viewHolder = new list_search.ViewHolder();
                 viewHolder.title = (TextView) convertView.findViewById(R.id.list_item_text2);
                 viewHolder.button = (ImageButton) convertView.findViewById(R.id.list_item_button2);
+                Log.d("Test1", datas.get(position));
+                Log.d("Test3", String.valueOf(viewHolder.button.getBackground()));
+                if(reader.contains(datas.get(position))){
+                    if(reader.getString(datas.get(position), "No name defined").equals("true")){
+                        viewHolder.button.setImageResource(R.drawable.download);
+                    }
+                }
+                else{
+                    editor.putString(datas.get(position),"false");
+                    editor.commit();
+                }
                 convertView.setTag(viewHolder);
             }
-            mainViewholder = (Picked.ViewHolder) convertView.getTag();
+            mainViewholder = (list_search.ViewHolder) convertView.getTag();
             mainViewholder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SharedPreferences.Editor edit1 = getSharedPreferences("saved", MODE_PRIVATE).edit();
-                    String temp = datas2.get(position);
-                    Toast.makeText(list_search.this, "Deleted " + datas.get(position), Toast.LENGTH_SHORT).show();
-                    edit1.remove(temp);
-                    edit1.apply();
-                    datas.remove(position);
-                    datas2.remove(position);
+                    Toast.makeText(list_search.this, "In onClick", Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = getSharedPreferences("clicked", MODE_PRIVATE).edit();
+                    Log.d("Test2", datas.get(position));
+                    editor.putString(datas.get(position),"true");
+                    editor.commit();
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
                 }
             });
+            Log.d("LMAO", reader.getString("clicker", "No name defined"));
             mainViewholder.title.setText(getItem(position));
 
             return convertView;
@@ -108,5 +126,12 @@ public class list_search extends AppCompatActivity {
     public class ViewHolder {
         TextView title;
         ImageButton button;
+    }
+    public void reset(View view){
+        SharedPreferences.Editor edit1 = getSharedPreferences("clicked", MODE_PRIVATE).edit();
+        edit1.clear().commit();
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 }
