@@ -97,11 +97,11 @@ public class Picked extends AppCompatActivity {
                     Toast.makeText(Picked.this, "Deleted " + data.get(position), Toast.LENGTH_SHORT).show();
                     edit1.remove(temp);
                     edit1.apply();
-                    data.remove(position);
-                    data2.remove(position);
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
+                    data.clear();
+                    data2.clear();
+                    ListView lv = (ListView) findViewById(R.id.chosen_list);
+                    generateListContent();
+                    lv.setAdapter(new MyListAdaper(Picked.this, R.layout.list_item, data));
                 }
             });
             mainViewholder.title.setText(getItem(position));
@@ -115,9 +115,19 @@ public class Picked extends AppCompatActivity {
         Button button;
     }
     public void back(View view){
-        Intent intent = new Intent(Picked.this, Search.class);
-        Bundle bundle = new Bundle();
-        intent.putExtras(bundle);
-        startActivity(intent);
+        SharedPreferences read = getSharedPreferences("back_button", MODE_PRIVATE);
+        String changer = read.getString("back", "No name defined");
+        if(changer.equals("list")){
+            Intent intent = new Intent(Picked.this, list_search.class);
+            Bundle bundle = new Bundle();
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+        else{
+            Intent intent = new Intent(Picked.this, Search.class);
+            Bundle bundle = new Bundle();
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
     }
 }

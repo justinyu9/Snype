@@ -11,13 +11,11 @@
         android:layout_alignParentTop="true"
         android:text="TextView" />
 
-    <ImageButton
-        android:id="@+id/list_item_button2"
+    <CheckBox
+        android:id="@+id/list_item_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        app:srcCompat="@android:drawable/checkbox_off_background" />
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
