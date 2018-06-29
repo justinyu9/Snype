@@ -1,2 +1,2 @@
-# Synpe
+# Snype
 Food App
