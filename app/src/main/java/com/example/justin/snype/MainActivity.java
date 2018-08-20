@@ -1,6 +1,7 @@
 package com.example.justin.snype;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     Map<String, String> params = new HashMap<>();
     private LocationManager locationManager;
     private LocationListener locationListener;
-    String latitude;
-    String longitude;
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
             }
 
             @Override
@@ -69,27 +71,23 @@ public class MainActivity extends AppCompatActivity {
             }
             return;
         }else{
-            locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-            String locationProvider = LocationManager.NETWORK_PROVIDER;
-            Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-            latitude = Double.toString(lastKnownLocation.getLatitude());
-            longitude = Double.toString(lastKnownLocation.getLongitude());
-            Log.v("latitude: ", Double.toString(lastKnownLocation.getLatitude()));
-            Log.v("longitude: ", Double.toString(lastKnownLocation.getLongitude()));
+            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            longitude = lastKnownLocation.getLongitude();
+            latitude = lastKnownLocation.getLatitude();
         }
 
-        mapiFactory = new YelpFusionApiFactory();
-        try{
-            myelpFusionApi = mapiFactory.createAPI(getString(R.string.yelp_api_key));
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-        params.put("term", "chinese japanese food");
-        params.put("limit", "50");
-        params.put("latitude", latitude);
-        params.put("longitude", longitude);
-
-        new getRestaurants().execute();
+//        mapiFactory = new YelpFusionApiFactory();
+//        try{
+//            myelpFusionApi = mapiFactory.createAPI(getString(R.string.yelp_api_key));
+//        }catch(IOException e){
+//            e.printStackTrace();
+//        }
+//        params.put("term", "chinese japanese food");
+//        params.put("limit", "50");
+//        params.put("latitude", Double.toString(latitude));
+//        params.put("longitude", Double.toString(longitude));
+//
+//        new getRestaurants().execute();
 
         Button myButton = (Button) findViewById(R.id.login_button);
         myButton.setOnClickListener(new android.view.View.OnClickListener() {
@@ -102,33 +100,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void guest_clicked(View view){
         Intent intent = new Intent(MainActivity.this, Enter_Name.class);
         Bundle bundle = new Bundle();
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
-    class getRestaurants extends AsyncTask<String, String, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Call<SearchResponse> call = myelpFusionApi.getBusinessSearch(params);
-            SearchResponse searchResponse = null;
-            try{
-                searchResponse=call.execute().body();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-            ArrayList<Business> businesses = searchResponse.getBusinesses();
-            Double rating = businesses.get(0).getRating();
-            if(searchResponse != null){
-                for(int i = 0; i<businesses.size(); i++){
-                    Log.v("Business: ", businesses.get(i).getName());
-                }
-                Log.v("Rating: ", rating.toString());
-            }
-            return null;
-        }
-    }
+//    class getRestaurants extends AsyncTask<String, String, String>{
+//
+//        @Override
+//        protected String doInBackground(String... strings) {
+//            Call<SearchResponse> call = myelpFusionApi.getBusinessSearch(params);
+//            SearchResponse searchResponse = null;
+//            try{
+//                searchResponse=call.execute().body();
+//            }catch(IOException e){
+//                e.printStackTrace();
+//            }
+//            ArrayList<Business> businesses = searchResponse.getBusinesses();
+//            Double rating = businesses.get(0).getRating();
+//            if(searchResponse != null){
+//                for(int i = 0; i<businesses.size(); i++){
+//                    Log.v("Business: ", businesses.get(i).getName());
+//                }
+//                Log.v("Rating: ", rating.toString());
+//            }
+//            return null;
+//        }
+//    }
 }
